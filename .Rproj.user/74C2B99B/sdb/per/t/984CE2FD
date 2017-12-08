@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"NYC Restaurant Inspections\"\noutput: \n  flexdashboard::flex_dashboard:\n    orientation: columns\n    vertical_layout: fill\n---\n\n```{r setup, include=FALSE}\nlibrary(flexdashboard)\n\nlibrary(tidyverse)\nlibrary(tidytext)\nlibrary(curl)\nlibrary(data.table)\nlibrary(dplyr)\nlibrary(DT)\nlibrary(forcats)\nlibrary(ggplot2)\nlibrary(ggridges)\nlibrary(ggthemes)\nlibrary(haven)\nlibrary(htmltools)\nlibrary(httr)\nlibrary(janitor)\nlibrary(jsonlite)\nlibrary(knitr)\nlibrary(knitLatex)\nlibrary(magrittr)\nlibrary(plotly)\nlibrary(readr)\nlibrary(readxl)\nlibrary(reshape2)\nlibrary(rvest)\nlibrary(stringr)\nlibrary(tools)\nlibrary(viridisLite)\nlibrary(viridis)\n```\n\n\n```{r cache = TRUE}\nrestaurant_inspections = read_csv(\"DOHMH_New_York_City_Restaurant_Inspection_Results.csv.gz\", \n                           col_types = cols(building = col_character()),\n                           na = c(\"NA\", \"N/A\")) %>%\n  filter(grade %in% c(\"A\", \"B\", \"C\"), boro != \"Missing\") %>% \n  mutate(boro = str_to_title(boro))\n```\n\nColumn {data-width=650}\n-----------------------------------------------------------------------\n\n### Distributions of inspection scores by borough\n\n\n```{r}\nrestaurant_inspections %>%\n  group_by(boro) %>%\n  plot_ly(y = ~score, color = ~boro, type = \"box\") \n```\n\nColumn {data-width=350}\n-----------------------------------------------------------------------\n\n### Inspection grade frequency by borough\n```{r}\nrestaurant_inspections %>%\n  group_by(boro) %>%\n  count(grade) %>%\n  ungroup() %>%\n  mutate(boro = fct_reorder(boro, n)) %>%\n  plot_ly(x = ~boro, y = ~n, color = ~grade, type = \"bar\")\n```\n\n### Inspection score over time by restaurant\n\n```{r}\nrestaurant_inspections %>%\n  group_by(camis) %>%\n  filter(!duplicated(inspection_date)) %>%\n  select(camis, inspection_date, score) %>%\n  plot_ly(x = ~inspection_date, y = ~score, group_by = ~camis,\n            type = 'scatter', \n            alpha = 0.25,\n            mode = 'lines+markers') %>%\n  layout(xaxis = list(range = c(as.Date('2012-01-01'), as.Date('2019-01-01'))))\n```\n\n",
+    "created" : 1512522435387.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3429250003",
+    "id" : "984CE2FD",
+    "lastKnownWriteTime" : 1512522891,
+    "last_content_update" : 1512522892056,
+    "path" : "~/Documents/Biostats MS/Data_Science/p8105_hw6_ije2103/hw6_flexdashboard.Rmd",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"p8105_hw6_ije2103\"\nauthor: \"Imaani Easthausen & MeOak Place\"\ndate: \"November 14, 2017\"\noutput: html_document\n---\n\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n\nlibrary(tidyverse)\nlibrary(tidytext)\nlibrary(curl)\nlibrary(data.table)\nlibrary(dplyr)\nlibrary(DT)\nlibrary(forcats)\nlibrary(ggplot2)\nlibrary(ggridges)\nlibrary(ggthemes)\nlibrary(haven)\nlibrary(htmltools)\nlibrary(httr)\nlibrary(janitor)\nlibrary(jsonlite)\nlibrary(knitr)\nlibrary(knitLatex)\nlibrary(magrittr)\nlibrary(plotly)\nlibrary(readr)\nlibrary(readxl)\nlibrary(reshape2)\nlibrary(rvest)\nlibrary(stringr)\nlibrary(tools)\nlibrary(viridisLite)\nlibrary(viridis)\n```\n\n#Introduction\nFor this project, we will work with a subset of the NYC restaurant inspections dataset accessed from https://dev.socrata.com/foundry/data.cityofnewyork.us/9w7m-hzhe in October 2017. \n\nWe will limit the data to restarants with an inspection grade of \"A,\" \"B,\" or \"C,\" and with known borough.  \n```{r cache = TRUE}\nrestaurant_inspections = read_csv(\"DOHMH_New_York_City_Restaurant_Inspection_Results.csv.gz\", \n                           col_types = cols(building = col_character()),\n                           na = c(\"NA\", \"N/A\")) %>%\n  filter(grade %in% c(\"A\", \"B\", \"C\"), boro != \"Missing\") %>% \n  mutate(boro = str_to_title(boro))\n\n```\nBelow we present boxplots of the distributions of inspection scores by borough. We observe that accross all boroughs the data are substantially right skewed. \n```{r}\nrestaurant_inspections %>%\n  group_by(boro) %>%\n  plot_ly(y = ~score, color = ~boro, type = \"box\") \n```\n\n\n\n\n\n\n\nBelow we present a plot showing the frequency of \"A,\" \"B,\" and \"C\" grades received in each borough. \n```{r}\nrestaurant_inspections %>%\n  group_by(boro) %>%\n  count(grade) %>%\n  ungroup() %>%\n  mutate(boro = fct_reorder(boro, n)) %>%\n  plot_ly(x = ~boro, y = ~n, color = ~grade, type = \"bar\")\n\n\n```\nBelow, we present a time series plot showing the inspection score over time for each restaurant where one line represents one restaurant. We observe substantial instability in inspection score over time. Baseline inspection score does not appear to predict future inspection score.\n```{r}\nrestaurant_inspections %>%\n  group_by(camis) %>%\n  filter(!duplicated(inspection_date)) %>%\n  select(camis, inspection_date, score) %>%\n  plot_ly(x = ~inspection_date, y = ~score, group_by = ~camis,\n            type = 'scatter', \n            alpha = 0.25,\n            mode = 'lines+markers') %>%\n  layout(xaxis = list(range = c(as.Date('2012-01-01'), as.Date('2019-01-01'))))\n\n\n```\n",
+    "created" : 1512522540693.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2475036125",
+    "id" : "4887F4B2",
+    "lastKnownWriteTime" : 1512522978,
+    "last_content_update" : 1512522978513,
+    "path" : "~/Documents/Biostats MS/Data_Science/p8105_hw6_ije2103/p8105_hw6_ije2103.Rmd",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

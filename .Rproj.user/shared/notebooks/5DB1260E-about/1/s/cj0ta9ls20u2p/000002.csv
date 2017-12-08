@@ -1,0 +1,2 @@
+"0","library(googleVis)"
+"0","op <- options(gvis.plot.tag='chart')"
