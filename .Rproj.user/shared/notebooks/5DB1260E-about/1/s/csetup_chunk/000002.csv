@@ -1,3 +1,0 @@
-"0","knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)"
-"0","knitr::opts_chunk$set(fig.width = 6, fig.asp = .6, out.width = ""90%"")"
-"0","options(knitr.table.format = ""html"") "
